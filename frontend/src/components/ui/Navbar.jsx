@@ -1,25 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Layers, Settings, Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Layers, Settings } from "lucide-react";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
-
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Projects", path: "/projects" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
-  ];
 
   return (
     <motion.header
@@ -34,97 +25,44 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center group-hover:border-indigo-500/70 transition">
-            <Layers size={15} className="text-indigo-400" />
+        {/* 🔥 PREMIUM LOGO */}
+        <Link to="/" className="flex items-center gap-2.5 group">
+          
+          {/* Icon */}
+          <div className="relative w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center overflow-hidden">
+            
+            {/* Glow */}
+            <div className="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover:opacity-100 blur-md transition duration-300" />
+
+            {/* Icon */}
+            <Layers
+              size={16}
+              className="text-indigo-400 relative z-10 group-hover:scale-110 transition-transform duration-300"
+            />
           </div>
-          <span className="font-bold text-sm tracking-tight">
-            folio<span className="text-indigo-400">.</span>
-          </span>
+
+          {/* Text */}
+          <div className="flex flex-col leading-tight">
+            <span className="font-semibold text-sm tracking-tight text-white group-hover:text-indigo-300 transition">
+              folio
+              <span className="text-indigo-400 group-hover:text-indigo-300 transition">.</span>
+            </span>
+
+            <span className="text-[10px] text-gray-500 tracking-wide hidden sm:block">
+              developer portfolio
+            </span>
+          </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`text-sm transition relative ${
-                  isActive
-                    ? "text-white"
-                    : "text-gray-400 hover:text-white"
-                }`}
-              >
-                {link.name}
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-underline"
-                    className="absolute left-0 -bottom-1 h-[2px] w-full bg-indigo-400 rounded-full"
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Right Section */}
-        <div className="flex items-center gap-3">
-
-          {/* Admin Button */}
-          <Link
-            to="/admin/login"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-400 hover:text-white border border-border hover:border-indigo-500/40 transition"
-          >
-            <Settings size={13} />
-            Admin
-          </Link>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-lg border border-border text-gray-400 hover:text-white transition"
-          >
-            {open ? <X size={16} /> : <Menu size={16} />}
-          </button>
-        </div>
+        {/* Admin Button */}
+        <Link
+          to="/admin/login"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-400 hover:text-white border border-border hover:border-indigo-500/40 transition"
+        >
+          <Settings size={13} />
+          Admin
+        </Link>
       </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="md:hidden px-4 pb-4"
-          >
-            <div className="flex flex-col gap-3 bg-bg/90 backdrop-blur-lg border border-border rounded-xl p-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setOpen(false)}
-                  className="text-sm text-gray-400 hover:text-white transition"
-                >
-                  {link.name}
-                </Link>
-              ))}
-
-              <Link
-                to="/admin/login"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 text-sm text-gray-400 hover:text-white"
-              >
-                <Settings size={14} />
-                Admin Panel
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.header>
   );
 }
