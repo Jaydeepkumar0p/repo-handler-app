@@ -12,6 +12,27 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // 🔥 Animation Variants
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const letter = {
+    hidden: { opacity: 0, y: 10 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3 },
+    },
+  };
+
+  const text = "folio.";
+
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
@@ -31,27 +52,39 @@ export default function Navbar() {
           {/* Icon */}
           <div className="relative w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center overflow-hidden">
             
-            {/* Glow */}
             <div className="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover:opacity-100 blur-md transition duration-300" />
 
-            {/* Icon */}
             <Layers
               size={16}
               className="text-indigo-400 relative z-10 group-hover:scale-110 transition-transform duration-300"
             />
           </div>
 
-          {/* Text */}
-          <div className="flex flex-col leading-tight">
-            <span className="font-semibold text-sm tracking-tight text-white group-hover:text-indigo-300 transition">
-              folio
-              <span className="text-indigo-400 group-hover:text-indigo-300 transition">.</span>
-            </span>
+          {/* 🔥 Animated Text */}
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="flex flex-col leading-tight"
+          >
+            <div className="flex">
+              {text.split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  variants={letter}
+                  className={`font-semibold text-sm tracking-tight ${
+                    char === "." ? "text-indigo-400" : "text-white"
+                  }`}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </div>
 
             <span className="text-[10px] text-gray-500 tracking-wide hidden sm:block">
               developer portfolio
             </span>
-          </div>
+          </motion.div>
         </Link>
 
         {/* Admin Button */}
